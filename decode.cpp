@@ -19,20 +19,21 @@ vector<string> readWord(string &s) {
 void parseFile(map<string, vector<bool>>& matrix, int k, const string& filename, int fPos, int nFiles) {
   ifstream f(filename);
   if (f.is_open()) {
-    int i = k-1;
+    int i = 0;
     vector<string> buffer(k);
-    for(int i=0; i < k-1; i++)
-      f >> buffer[i];
+    int sfirst = 0;
     while(not f.eof()) {
       string w; f >> w;
       for(string str :  readWord(w)) {
 	buffer[i] = str;
-	string res = buffer[(i+1)%k];
-	for(int j=2; j <= k; j++)
-	  res += " " + buffer[(i+j)%k];
+	if(sfirst >= k-1) {
+	  string res = buffer[(i+1)%k];
+	  for(int j=2; j <= k; j++)
+	    res += " " + buffer[(i+j)%k];
 
-	auto itr = matrix.insert(make_pair(res, vector<bool> (nFiles, 0))).first;
-	itr->second[fPos] = true;
+	  auto itr = matrix.insert(make_pair(res, vector<bool> (nFiles, 0))).first;
+	  itr->second[fPos] = true;
+	} else sfirst++;
 	++i %= k;
       }
     }
