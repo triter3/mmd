@@ -38,7 +38,7 @@ void parseFile(map<string, vector<bool>>& matrix, int k, const string& filename,
       }
     }
   } else {
-    cout << "el fichero " << filename << " no existe" << endl;
+    cout << "El fichero " << filename << " no existe" << endl;
   }
   f.close();
 }
