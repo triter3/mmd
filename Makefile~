@@ -1,4 +1,0 @@
-all: prac
-
-prac: decode.o jaccard.o
-	g++ -o prac main.cpp
