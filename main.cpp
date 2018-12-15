@@ -3,9 +3,11 @@
 #include <string>
 #include <map>
 #include <utility>
+#include <list>
 #include "jaccard.h"
 #include "decode.h"
 #include "minhash.h"
+#include "lsh.h"
 using namespace std;
 
 void printMatrix(const map<string, vector<bool>>& matrix, int k) {
@@ -47,6 +49,23 @@ void printSignatureMatrix(const vector<vector<int>> &vec) {
   }
 }
 
+void printCandidates(const list<pair<int, int>>& list) {
+  cout << "candidatos: " << endl;
+  auto itr = list.begin();
+  for(; itr != list.end(); itr++) {
+    cout << "doc: " << itr->first << " / doc: " << itr->second << endl; 
+  }
+}
+
+void printCandidatesWithSimilarity(vector<vector<int>>& signatureMatrix, int t, const list<pair<int, int>>& list) {
+  cout << "candidatos: " << endl;
+  auto itr = list.begin();
+  for(; itr != list.end(); itr++) {
+    cout << "(doc: " << itr->first << " / doc: " << itr->second << ") similarity: ";
+    cout << compareFilesHash(signatureMatrix, itr->first, itr->second, t) << endl;
+  }
+}
+
 int main() {
   //Lectura datos iniciales
   cout << "Numero de ficheros: ";
@@ -84,10 +103,22 @@ int main() {
   vector<vector<int>> signatureMatrix(t, vector<int>(nFiles, -1));
   generateSignatureMatrix(matrix, t, signatureMatrix, nFiles);
   printSignatureMatrix(signatureMatrix);
-  
+
+  //lsh
+  //buscamos possibles candidatos para ser comparados
+  cout << endl << "Número de tiras (tiene que ser divisible por " << t << "): ";
+  int bands;
+  while(cin >> bands and t%bands != 0)
+    cout << endl << "Número de tiras (tiene que ser divisible por " << t << "): ";
+  list<pair<int, int>> candidates;
+  getCandidates(signatureMatrix, candidates, bands);
+  printCandidatesWithSimilarity(signatureMatrix, t, candidates);
+
+  /*
   //Cálculo similaridad de signatures
   vector<vector<double>> signatureSimilarity(nFiles, vector<double>(nFiles, 0.0d));
   generateSignatureSimilarity(signatureMatrix, signatureSimilarity, t);
   cout << endl << "Signature Similarity: " << endl;
   printDoubleMatrix(signatureSimilarity);
+  */
 }

@@ -16,14 +16,31 @@ void generateHash(map<string, vector<bool>>& matrix ,vector<vector<bool>*>& hash
 }
 
 int getPrime(int maxX) {
-    //Por implementar
-    return 17;
+  vector<int> primos(0);
+  primos.push_back(2);
+  int i=0;
+  int n=3;
+  while(primos[i] < maxX) {
+    bool p = true;
+    for(int k=0; k <= i and p and primos[k]*primos[k] <= n; k++)
+      p = (n%primos[k] != 0);
+    
+    if(p) {
+      primos.push_back(n);
+      i++;
+    }
+    n += 2; //los pares seguro que no son primos  
+  }
+  
+  return n-2;
 }
 
 //Admite mejoras... de momento sirve para un primer prototipo
 void generateCoefficients(int& a, int& b, int maxX) {
-    a = (rand()%maxX)+1;
-    b = (rand()%maxX)+1;
+    a = (rand()%(maxX-1))+2;
+    //b no puede ser multiplo de a, si lo es lo volvemos a buscar
+    cout << a << endl;
+    while((b = (rand()%maxX)+1)%a == 0);
     cout << "DEBUG: a: " << a << " b: " << b << endl; 
 }
 
@@ -45,12 +62,12 @@ void generateCoefficients(int& a, int& b, int maxX) {
 //signatureMatrix inicializada con todo -1
 void generateSignatureMatrix(map<string, vector<bool>>& matrix, int t, vector<vector<int>>& signatureMatrix, int numDoc) {
     srand(time(NULL));
-    int c = getPrime(matrix.size()-1);
+    int c = getPrime(matrix.size()); //creo que es sin el -1, no?
     //Vector que almacena cada vector de valores generados por cada hash
     vector<vector<vector<bool>*>> hashes(t, vector<vector<bool>*>(c, nullptr)); 
     for (int i = 0; i < t; ++i) { //Por cada Hash
         int a, b;
-        generateCoefficients(a, b, matrix.size()-1);
+        generateCoefficients(a, b, matrix.size());
         generateHash(matrix, hashes[i], a, b, c);
         //Rellenar signatureMatrix
         int found = 0;
