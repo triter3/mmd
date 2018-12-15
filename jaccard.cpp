@@ -9,6 +9,8 @@ void compareAll(map<string, vector<bool>>& matrix, vector<vector<double>>& res) 
   }
 }
 
+//tipo1: los dos documentos contienen el shingle
+//tipo2: al menos uno de los dos documentos contiene el shingle
 double compareFiles(map<string, vector<bool>>& matrix, int f1, int f2) {
   int tipo1 = 0; int tipo2 = 0;
   for(auto p : matrix) {
