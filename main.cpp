@@ -119,9 +119,9 @@ int main() {
   vector<vector<double>> jaccard(nFiles, vector<double>(nFiles, 0.0d));
   //Cronometramos tiempo de generar la similitud de jaccard por todas las parejas de ficheros posibles
   auto start = chrono::high_resolution_clock::now();
-  //compareAll(matrix, jaccard);
+  compareAll(matrix, jaccard);
   chrono::duration<double> jaccardShinglesTime = chrono::high_resolution_clock::now() - start;
-  //printDoubleMatrix(jaccard, filenames);
+  printDoubleMatrix(jaccard, filenames);
 
   //MinHash
   //Cálculo signature matrix
