@@ -4,6 +4,7 @@
 #include <map>
 #include <utility>
 #include <list>
+#include <algorithm>
 #include "jaccard.h"
 #include "decode.h"
 #include "minhash.h"
@@ -113,6 +114,10 @@ int main() {
   list<pair<int, int>> candidates;
   getCandidates(signatureMatrix, candidates, bands);
   printCandidatesWithSimilarity(signatureMatrix, t, candidates);
+
+  list<pair<int, int>> candidates1;
+  getCandidatesOpt(signatureMatrix, candidates1, bands, matrix.size());
+  printCandidatesWithSimilarity(signatureMatrix, t, candidates1);
 
   /*
   //Cálculo similaridad de signatures
