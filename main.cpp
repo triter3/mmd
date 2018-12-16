@@ -24,7 +24,10 @@ void printMatrix(const map<string, vector<bool>>& matrix, int k) {
   }
 }
 
-void printDoubleMatrix(const vector<vector<double>>& vec) {
+void printDoubleMatrix(const vector<vector<double>>& vec, const vector<string>& filenames) {
+  for(int i=0; i < filenames.size(); ++i)
+      cout << "File " << (i+1) << " = " << filenames[i] << endl;
+  cout << endl;
   char s[12];
   printf("%-12s", "");
   for(int i=0; i < vec[0].size(); i++) {
@@ -100,12 +103,12 @@ int main() {
     cout << " " << filenames[i];
   }
   cout << endl << endl;
-  
+
   int k;
   cout << "k-shingles? ";
   cin >> k;
   cout << endl;
-  
+
   //Preparar matriz shingles
   map<string, vector<bool>> matrix;
   parse (matrix, k ,filenames);
@@ -118,8 +121,8 @@ int main() {
   auto start = chrono::high_resolution_clock::now();
   compareAll(matrix, jaccard);
   chrono::duration<double> jaccardShinglesTime = chrono::high_resolution_clock::now() - start;
-  printDoubleMatrix(jaccard);  
-  
+  printDoubleMatrix(jaccard, filenames);
+
   //MinHash
   //Cálculo signature matrix
   cout << endl << "Número de funciones de hash para MinHash: ";
@@ -141,14 +144,14 @@ int main() {
   generateSignatureSimilarity(signatureMatrix, signatureSimilarity, t);
   chrono::duration<double> jaccardMinHasTime = chrono::high_resolution_clock::now() - start;
   cout << endl << "Signature Similarity: " << endl;
-  printDoubleMatrix(signatureSimilarity);
+  printDoubleMatrix(signatureSimilarity, filenames);
 
   //lsh
   //buscamos posibles candidatos para ser comparados
-  cout << endl << "Número de tiras (tiene que ser divisible por " << t << "): ";
+  cout << endl << "Número de tiras (tiene que ser divisor de " << t << "): ";
   int bands;
   while(cin >> bands and t%bands != 0)
-    cout << endl << "Número de tiras (tiene que ser divisible por " << t << "): ";
+  cout << endl << "Número de tiras (tiene que ser divisor de " << t << "): ";
   cout << endl;
   list<pair<int, int>> candidates;
   //Cronometramos el lsh
