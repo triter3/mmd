@@ -11,11 +11,10 @@
 void getHashValue(vector<vector<int>>& signatureMatrix, vector<unsigned int>& values, int nFiles, int s, int r, int ns) {
   for(int f=0; f < nFiles; f++) {
     values[f] = 0;
-    int inc = ns/2;
     int a = 1;
     for(int i=0; i < r; i++) {
       values[f] = (values[f] + signatureMatrix[s+i][f]*a) % PRIME_NUMBER;
-      a *= inc;
+      a *= ns;
     }
   }
   cout << endl;

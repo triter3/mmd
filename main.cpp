@@ -5,6 +5,7 @@
 #include <utility>
 #include <list>
 #include <algorithm>
+#include <chrono>
 #include "jaccard.h"
 #include "decode.h"
 #include "minhash.h"
@@ -112,12 +113,18 @@ int main() {
   while(cin >> bands and t%bands != 0)
     cout << endl << "Número de tiras (tiene que ser divisible por " << t << "): ";
   list<pair<int, int>> candidates;
+  auto start = chrono::high_resolution_clock::now();
   getCandidates(signatureMatrix, candidates, bands);
+  chrono::duration<double> time = chrono::high_resolution_clock::now() - start;
   printCandidatesWithSimilarity(signatureMatrix, t, candidates);
+  cout << "segundos: " << time.count() << "s" << endl;
 
   list<pair<int, int>> candidates1;
+  start = chrono::high_resolution_clock::now();
   getCandidatesOpt(signatureMatrix, candidates1, bands, matrix.size());
+  time = chrono::high_resolution_clock::now() - start;
   printCandidatesWithSimilarity(signatureMatrix, t, candidates1);
+  cout << "segundos: " << time.count() << "s" << endl;
 
   /*
   //Cálculo similaridad de signatures
