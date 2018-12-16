@@ -35,7 +35,6 @@ int getPrime(int maxX) {
   return n-2;
 }
 
-//Admite mejoras... de momento sirve para un primer prototipo
 void generateCoefficients(int& a, int& b, int maxX) {
     a = (rand()%(maxX-1))+2;
     //b no puede ser multiplo de a, si lo es lo volvemos a buscar

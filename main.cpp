@@ -6,6 +6,7 @@
 #include <list>
 #include <algorithm>
 #include <chrono>
+#include <dirent.h>
 #include "jaccard.h"
 #include "decode.h"
 #include "minhash.h"
@@ -68,18 +69,37 @@ void printCandidatesWithSimilarity(vector<vector<int>>& signatureMatrix, int t, 
   }
 }
 
+void getDir(string dir, vector<string>& files)
+{
+    DIR *dp;
+    struct dirent *dirp;
+    if((dp  = opendir(dir.c_str())) == NULL) {
+        cout << "No se puede abrir o no se encuentra: " << dir << endl;
+    }
+
+    while ((dirp = readdir(dp)) != NULL) {
+        if (string(dirp->d_name) != "." && string(dirp->d_name) != "..")
+            files.push_back(dir + "/" + string(dirp->d_name));
+    }
+    closedir(dp);
+}
+
+
 int main() {
   //Lectura datos iniciales
-  cout << "Numero de ficheros: ";
-  int nFiles;
-  cin >> nFiles;
-  
-  vector<string> filenames(nFiles);
-  for(int i =0; i < nFiles; i++) {
-    cout << "Nombre fichero " << i+1 << ": ";
-    cin >> filenames[i];
-  }
+  cout << "Carpeta con documentos (path): ";
+  string dir;
+  cin >> dir;
+  vector<string> filenames(0);
+  getDir(dir, filenames);
+  int nFiles = filenames.size();
 
+  cout << "Documentos a analizar:" << endl;
+  for (int i = 0; i < nFiles; ++i) {
+    cout << " " << filenames[i];
+  }
+  cout << endl << endl;
+  
   int k;
   cout << "k-shingles? ";
   cin >> k;
@@ -107,22 +127,26 @@ int main() {
   printSignatureMatrix(signatureMatrix);
 
   //lsh
-  //buscamos possibles candidatos para ser comparados
+  //buscamos posibles candidatos para ser comparados
   cout << endl << "Número de tiras (tiene que ser divisible por " << t << "): ";
   int bands;
   while(cin >> bands and t%bands != 0)
     cout << endl << "Número de tiras (tiene que ser divisible por " << t << "): ";
   list<pair<int, int>> candidates;
+  //Cronometro
   auto start = chrono::high_resolution_clock::now();
   getCandidates(signatureMatrix, candidates, bands);
   chrono::duration<double> time = chrono::high_resolution_clock::now() - start;
+  
   printCandidatesWithSimilarity(signatureMatrix, t, candidates);
   cout << "segundos: " << time.count() << "s" << endl;
 
   list<pair<int, int>> candidates1;
+  //Cronometro
   start = chrono::high_resolution_clock::now();
   getCandidatesOpt(signatureMatrix, candidates1, bands, matrix.size());
   time = chrono::high_resolution_clock::now() - start;
+  
   printCandidatesWithSimilarity(signatureMatrix, t, candidates1);
   cout << "segundos: " << time.count() << "s" << endl;
 
