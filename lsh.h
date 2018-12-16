@@ -7,8 +7,8 @@
 using namespace std;
 
 
-void getCandidates(vector<vector<int>>& signatureMatrix, list<pair<int, int>>& candidates, int bands);
+void getCandidates(vector<vector<int>>& signatureMatrix, vector<vector<bool>>& candidates, int bands);
 
-void getCandidatesOpt(vector<vector<int>>& signatureMatrix, list<pair<int, int>>& candidates, int bands, int nshingles);
+void getCandidatesOpt(vector<vector<int>>& signatureMatrix, vector<vector<bool>>&, int bands, int nshingles);
 
 

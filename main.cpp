@@ -65,12 +65,12 @@ void printCandidates(const list<pair<int, int>>& list, const vector<double>& res
   }
 }
 
-void genSimilarityCandidates(vector<vector<int>>& signatureMatrix, int t, const list<pair<int, int>>& list, vector<double>& res) {
-  auto itr = list.begin();
-  int i=0;
-  for(; itr != list.end(); itr++) {
-    res[i] = compareFilesHash(signatureMatrix, itr->first, itr->second, t);
-    i++;
+void genSimilarityCandidates(vector<vector<int>>& signatureMatrix, int t, int nFiles, const vector<vector<bool>> candidates, vector<vector<double>>& res) {
+  for(int f=0; f < nFiles; f++) {
+    for(int f1=f; f1 < nFiles; f1++) {
+      if (f == f1) res[f1][f] = 1.0;
+      else if (candidates[f][f1]) res[f1][f] = compareFilesHash(signatureMatrix, f, f1, t); 
+    }
   }
 }
 
@@ -119,9 +119,9 @@ int main() {
   vector<vector<double>> jaccard(nFiles, vector<double>(nFiles, 0.0d));
   //Cronometramos tiempo de generar la similitud de jaccard por todas las parejas de ficheros posibles
   auto start = chrono::high_resolution_clock::now();
-  compareAll(matrix, jaccard);
+  //compareAll(matrix, jaccard);
   chrono::duration<double> jaccardShinglesTime = chrono::high_resolution_clock::now() - start;
-  printDoubleMatrix(jaccard, filenames);
+  //printDoubleMatrix(jaccard, filenames);
 
   //MinHash
   //Cálculo signature matrix
@@ -134,7 +134,6 @@ int main() {
   start = chrono::high_resolution_clock::now();
   generateSignatureMatrix(matrix, t, signatureMatrix, nFiles);
   chrono::duration<double> generateSignatureTime = chrono::high_resolution_clock::now() - start;
-  cout << "candidatos con lsh: " << endl;
   printSignatureMatrix(signatureMatrix);
 
   //Cálculo similaridad de signatures
@@ -153,26 +152,26 @@ int main() {
   while(cin >> bands and t%bands != 0)
   cout << endl << "Número de tiras (tiene que ser divisor de " << t << "): ";
   cout << endl;
-  list<pair<int, int>> candidates;
+  vector<vector<bool>> candidates(nFiles, vector<bool> (nFiles, false));
+  vector<vector<double>> signatureSimilarityLsh(nFiles, vector<double>(nFiles, 0.0d));
   //Cronometramos el lsh
   start = chrono::high_resolution_clock::now();
   getCandidates(signatureMatrix, candidates, bands);
-  vector<double> res(candidates.size());
-  genSimilarityCandidates(signatureMatrix, t, candidates, res);
+  genSimilarityCandidates(signatureMatrix, t, nFiles, candidates, signatureSimilarityLsh);
   chrono::duration<double> similarityWithLshTime = chrono::high_resolution_clock::now() - start;
   cout << "candidatos con lsh: " << endl;
-  printCandidates(candidates, res);
+  printDoubleMatrix(signatureSimilarityLsh, filenames);
   cout << endl;
 
-  list<pair<int, int>> candidates1;
+  vector<vector<bool>> candidates1(nFiles, vector<bool> (nFiles, false));
+  vector<vector<double>> signatureSimilarityLshOpt(nFiles, vector<double>(nFiles, 0.0d));
   //Cronometramos el lsg optimizado
   start = chrono::high_resolution_clock::now();
   getCandidatesOpt(signatureMatrix, candidates1, bands, matrix.size());
-  vector<double> res1(candidates1.size());
-  genSimilarityCandidates(signatureMatrix, t, candidates1, res1);
+  genSimilarityCandidates(signatureMatrix, t, nFiles, candidates1, signatureSimilarityLshOpt);
   chrono::duration<double> similarityWithLshOptTime = chrono::high_resolution_clock::now() - start;
   cout << "candidatos con lsh optimizado: " << endl;
-  printCandidates(candidates1, res1);
+  printDoubleMatrix(signatureSimilarityLshOpt, filenames);
   cout << endl;
 
   //pintamos los tiempos
