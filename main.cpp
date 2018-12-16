@@ -24,7 +24,10 @@ void printMatrix(const map<string, vector<bool>>& matrix, int k) {
   }
 }
 
-void printDoubleMatrix(const vector<vector<double>>& vec) {
+void printDoubleMatrix(const vector<vector<double>>& vec, const vector<string>& filenames) {
+  for(int i=0; i < filenames.size(); ++i)
+      cout << "File " << (i+1) << " = " << filenames[i] << endl;
+  cout << endl;
   char s[12];
   printf("%-12s", "");
   for(int i=0; i < vec[0].size(); i++) {
@@ -114,7 +117,7 @@ int main() {
   cout << endl;
   vector<vector<double>> jaccard(nFiles, vector<double>(nFiles, 0.0d));
   compareAll(matrix, jaccard);
-  printDoubleMatrix(jaccard);  
+  printDoubleMatrix(jaccard, filenames);  
   
   //MinHash
   //Cálculo signature matrix
@@ -126,12 +129,19 @@ int main() {
   generateSignatureMatrix(matrix, t, signatureMatrix, nFiles);
   printSignatureMatrix(signatureMatrix);
 
+  //Cálculo similaridad de signaturas
+  vector<vector<double>> signatureSimilarity(nFiles, vector<double>(nFiles, 0.0d));
+  generateSignatureSimilarity(signatureMatrix, signatureSimilarity, t);
+  cout << endl << "Signature Similarity: " << endl;
+  printDoubleMatrix(signatureSimilarity, filenames);
+  
+  
   //lsh
   //buscamos posibles candidatos para ser comparados
-  cout << endl << "Número de tiras (tiene que ser divisible por " << t << "): ";
+  cout << endl << "Número de tiras (tiene que ser divisor de " << t << "): ";
   int bands;
   while(cin >> bands and t%bands != 0)
-    cout << endl << "Número de tiras (tiene que ser divisible por " << t << "): ";
+    cout << endl << "Número de tiras (tiene que ser divisor de " << t << "): ";
   list<pair<int, int>> candidates;
   //Cronometro
   auto start = chrono::high_resolution_clock::now();
@@ -149,12 +159,5 @@ int main() {
   
   printCandidatesWithSimilarity(signatureMatrix, t, candidates1);
   cout << "segundos: " << time.count() << "s" << endl;
-
-  /*
-  //Cálculo similaridad de signatures
-  vector<vector<double>> signatureSimilarity(nFiles, vector<double>(nFiles, 0.0d));
-  generateSignatureSimilarity(signatureMatrix, signatureSimilarity, t);
-  cout << endl << "Signature Similarity: " << endl;
-  printDoubleMatrix(signatureSimilarity);
-  */
+  
 }

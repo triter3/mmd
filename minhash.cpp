@@ -38,23 +38,10 @@ int getPrime(int maxX) {
 void generateCoefficients(int& a, int& b, int maxX) {
     a = (rand()%(maxX-1))+2;
     //b no puede ser multiplo de a, si lo es lo volvemos a buscar
-    cout << a << endl;
+    //cout << a << endl;
     while((b = (rand()%maxX)+1)%a == 0);
-    cout << "DEBUG: a: " << a << " b: " << b << endl; 
+    //cout << "DEBUG: a: " << a << " b: " << b << endl; 
 }
-
-/*void scriptedCoefficients(int& a, int& b, int& c, int i) {
-    if (i == 0) {
-        a = 12;
-        b = 8;
-        c = 17;
-    }
-    else if (i == 1) {
-        a = 14;
-        b = 3;
-        c = 17;
-    }
-}*/
 
 //t: número de funciones hash
 //numDoc: número de documentos
