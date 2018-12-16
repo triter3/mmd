@@ -17,7 +17,6 @@ void getHashValue(vector<vector<int>>& signatureMatrix, vector<unsigned int>& va
       a *= ns;
     }
   }
-  cout << endl;
 }
 
 //indica si dos subvector de los vectors son iguales
