@@ -1,6 +1,0 @@
-List containers are implemented as doubly-linked lists; Doubly linked unrelated 
-can store each of a elements they contain in different 
-and lists storage locations. The ordering is kept internally by 
-the association to each element of the link link the 
-element preceding it and a to to the element following 
-it.  

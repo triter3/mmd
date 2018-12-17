@@ -1,1 +1,0 @@
-Este es un documento para testear si el algoritmo detecta documentos similares en los que se ha variado la posicion de unas pocas palabras. A este documento le anadimos unas pocas palabras al final.
